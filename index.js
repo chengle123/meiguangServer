@@ -1,18 +1,21 @@
 const mysql = require('mysql');
-var path = require('path');
-var express = require('express');
-var bodyParser = require('body-parser');
-var router = express.Router();
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+const router = express.Router();
 const account = require('./models/account');
-var cron = require('node-cron');
+const cron = require('node-cron');
 const Sequelize= require('sequelize');
+const qr = require('qr-image');
+const Jimp = require("jimp");
+const fs = require('fs');
 
 // 本地服务======================================================================================
 
 var app = express();
 app.use(bodyParser.json({limit:'50mb'}));
 app.use(bodyParser.urlencoded({ limit:'50mb', extended: false }));
-app.use(express.static(path.join(__dirname, 'app')));
+app.use(express.static(path.join(__dirname, './')));
 var server = app.listen(8787, function() {
 	console.log('Ready');
 });
@@ -134,13 +137,88 @@ router.post('/login', function(req, res) {
 	}
 })
 
+// 请求图片
+router.post('/getQrCodeImg', function(req, res) {
+    var data = JSON.parse(req.body.data);
+    var url = req.body.url;
+    try{
+        goodsQrCodeImg.qrCode(url,(qrImg)=>{
+            try{
+                goodsQrCodeImg.composite(qrImg, data.Pic, res);
+            }catch(e) {
+                res.json({
+                    result: 'error',
+                    data: '',
+                    msg: '图片请求失败,ERROR:001'
+                })
+            }
+        });
+	}catch(e) {
+        res.json({
+            result: 'error',
+            data: '',
+            msg: '图片请求失败,ERROR:002'
+        })
+	}
+})
 
 app.use('/', router);
+
+var goodsQrCodeImg = {
+    qrCode : (url,fn)=>{
+        var qr_png = qr.image(url, { type: 'png', margin: 2, size: 8});
+        var imgName = `./images/${new Date().getTime()}.png`;
+        var qr_pipe = qr_png.pipe(fs.createWriteStream(imgName));
+        qr_pipe.on('error', function(err){
+            console.log(err);
+            return;
+        })
+        qr_pipe.on('finish', function(){
+            // console.log(imgName);
+            fn(imgName);
+        })
+    },
+    composite: (qrImg, url, res) => {
+        var downUrl = imgDispose(url);
+        Jimp.read(qrImg, function (err, lennaQR) {
+        lennaQR.resize(232, 232).write(qrImg);
+        Jimp.read(downUrl, function (err, lennaIMG) {
+            if (err) throw err;
+            var imgName = qrImg.split('images/')[1];
+            var top = lennaIMG.bitmap.height - 242, left = lennaIMG.bitmap.width - 242;
+            lennaIMG.composite(lennaQR, left, top).write(`./images/${imgName}`);
+            return res.json({
+                result: 'success',
+                data: {
+                    imgUrl: 'http://meiguang.emym.top/images/'+imgName,
+                    imgName: imgName
+                },
+                msg: '获取图片地址成功'
+            })
+        });
+        });
+    }
+}
+  
+function imgDispose(url){
+  if(url.indexOf('_.webp')>-1){
+    return url.split('_.webp')[0];
+  }else{
+    return url;
+  }
+}
 
 // 定时更新任务
 cron.schedule('1 0 0 * * *', function() {
     account.update({remainderDays: Sequelize.literal('`remainderDays` -1')}, {where:{remainderDays:{$gt:0}}}).then(rows => {
         console.log('数据更新')
-    })
+    });
+
+    var dirList = fs.readdirSync('./images');
+     dirList.forEach(function(fileName)
+     {
+         fs.unlinkSync('./images/' + fileName);
+        //  console.log(`删除${fileName}`)
+     });
 });
  
