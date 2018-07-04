@@ -143,7 +143,7 @@ router.post('/login', function(req, res) {
 router.post('/getQrCodeImg', function(req, res) {
     var data = JSON.parse(req.body.data);
     var url = req.body.url;
-    console.log(url)
+    // console.log(url)
     try{
         goodsQrCodeImg.qrCode(url,(qrImg)=>{
             try{
@@ -183,17 +183,17 @@ var goodsQrCodeImg = {
     },
     composite: (dateName, data, res) => {
         var downUrl = goodsQrCodeImg.imgDispose(data.Pic);
-        var imgName = `${dateName}.png`;
+        // var imgName = `${dateName}.png`;
         var isTmall = data.IsTmall == 1 ? './template/tmall.png' : './template/tao.png';
         var html = `<html>
                     <body>
                         <div style="width:750px;height:1192px;position: relative;font-family:sans-serif, 'Microsoft YaHei';">
                             <div style="font-size:32px;position: absolute;left: 44px;top:894px;">
-                                <div style="position: absolute; width: 350px; top: -6px; left: 45px;">${data.ShowTitle}</div>
+                                <div style="position: absolute; width: 350px; top: -13px; left: 45px;">${data.ShowTitle}</div>
                             </div>
                             <div style="color:#fff;text-align: center;width:292px;height:354px;position:absolute;left:445px;top:610px;">
-                                <div style="font-size:76px;position: relative;top: 105px;">${(data.ShowPrice - data.QuanAmount) * 100 / 10000}</div>
-                                <div style="font-size:45px;position: relative;top:135px">${data.QuanAmount * 100 / 10000}元券</div>
+                                <div style="font-size:76px;position: relative;top: 100px;">${(data.ShowPrice - data.QuanAmount) * 100 / 10000}</div>
+                                <div style="font-size:45px;position: relative;top:115px">${data.QuanAmount * 100 / 10000}元券</div>
                             </div>
                             <div style="color:#d70b50;font-size: 60px; position: absolute; top: 1000px; left: 40px;">
                                 ${(data.ShowPrice - data.QuanAmount) * 100 / 10000}<span style="font-size:40px;">RMB</span>
@@ -218,17 +218,18 @@ var goodsQrCodeImg = {
                             Jimp.read(`./images/${dateName}.png`, function (err, lennaQR) {
                                 lennaQR.resize(130, 130);
                                 Jimp.read(`./images/${dateName}text.png`, function (err, textImg) {
+                                    var name = 
                                     bgImg.composite(lennaIMG, 26, 151)
                                             .composite(lennaQR, 529, 981)
                                             .composite(dunpai, 445, 610)
                                             .composite(isTmallImg, 44, 894)
                                             .composite(textImg, 0, 0)
-                                            .write(`./images/${imgName}`);
+                                            .write(`./images/${dateName}result.jpg`);
                                     return res.json({
                                         result: 'success',
                                         data: {
-                                            imgUrl: 'http://meiguang.emym.top/images/'+imgName,
-                                            imgName: imgName
+                                            imgUrl: `http://meiguang.emym.top/images/${dateName}result.jpg`,
+                                            imgName: `${dateName}result.jpg`
                                         },
                                         msg: '获取图片地址成功'
                                     })

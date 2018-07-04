@@ -68,11 +68,11 @@ var goodsQrCodeImg = {
                     <body>
                         <div style="width:750px;height:1192px;position: relative;font-family:sans-serif, 'Microsoft YaHei';">
                             <div style="font-size:32px;position: absolute;left: 44px;top:894px;">
-                                <div style="position: absolute; width: 350px; top: -6px; left: 45px;">${data.ShowTitle}</div>
+                                <div style="position: absolute; width: 350px; top: -13px; left: 45px;">${data.ShowTitle}</div>
                             </div>
                             <div style="color:#fff;text-align: center;width:292px;height:354px;position:absolute;left:445px;top:610px;">
-                                <div style="font-size:76px;position: relative;top: 105px;">${(data.ShowPrice - data.QuanAmount) * 100 / 10000}</div>
-                                <div style="font-size:45px;position: relative;top:135px">${data.QuanAmount * 100 / 10000}元券</div>
+                                <div style="font-size:76px;position: relative;top: 100px;">${(data.ShowPrice - data.QuanAmount) * 100 / 10000}</div>
+                                <div style="font-size:45px;position: relative;top:115px">${data.QuanAmount * 100 / 10000}元券</div>
                             </div>
                             <div style="color:#d70b50;font-size: 60px; position: absolute; top: 1000px; left: 40px;">
                                 ${(data.ShowPrice - data.QuanAmount) * 100 / 10000}<span style="font-size:40px;">RMB</span>
