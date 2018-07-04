@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "dom-to-image": "^2.6.0",
     "express": "^4.16.3",
     "fa": "^1.0.1",
     "jimp": "^0.2.28",
@@ -20,6 +19,7 @@
     "path": "^0.12.7",
     "qr-image": "^3.2.0",
     "request": "^2.79.0",
-    "sequelize": "^4.37.7"
+    "sequelize": "^4.37.7",
+    "webshot": "^0.18.0"
   }
 }
