@@ -101,19 +101,24 @@ router.post('/login', function(req, res) {
                             msg: '此设备已经与其他账号绑定'
                         })
                     }else{
-                        if(rows.dataValues.remainderDays > 0){
-                            res.json({
-                                result: 'success',
-                                data: '',
-                                msg: rows.dataValues.remainderDays < 500 ? '登录成功，剩余天数为：' + rows.dataValues.remainderDays + '天' : '登录成功，剩余天数为：永久'
-                            })
-                        }else{
-                            res.json({
-                                result: 'error',
-                                data: '',
-                                msg: '账户已到期'
-                            })
-                        }
+                        res.json({
+                            result: 'success',
+                            data: '',
+                            msg: '登录成功'
+                        })
+                        // if(rows.dataValues.remainderDays > 0){
+                        //     res.json({
+                        //         result: 'success',
+                        //         data: '',
+                        //         msg: rows.dataValues.remainderDays < 500 ? '登录成功，剩余天数为：' + rows.dataValues.remainderDays + '天' : '登录成功，剩余天数为：永久'
+                        //     })
+                        // }else{
+                        //     res.json({
+                        //         result: 'error',
+                        //         data: '',
+                        //         msg: '账户已到期'
+                        //     })
+                        // }
                     }
                 }else{
                     res.json({
