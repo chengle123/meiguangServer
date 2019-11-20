@@ -19,7 +19,7 @@
     "path": "^0.12.7",
     "qr-image": "^3.2.0",
     "request": "^2.79.0",
-    "sequelize": "^4.37.7",
+    "sequelize": "^5.15.1",
     "webshot": "^0.18.0"
   }
 }
